@@ -48,3 +48,8 @@ class UserResponse(BaseModel):
     success: bool
     message: str
 
+
+class UserRegisterStringResponse(BaseModel):
+    success: str
+    message: str
+

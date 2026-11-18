@@ -10,6 +10,7 @@ from app.schemas import (
     UserLookup,
     UserLookupResponse,
     UserLookupStringResponse,
+    UserRegisterStringResponse,
     UserResponse,
 )
 
@@ -59,3 +60,13 @@ def register_user(payload: UserCreate, db: Session = Depends(get_db)):
         )
 
     return UserResponse(success=True, message="Registration successful")
+
+
+@router.post("/register-string", response_model=UserRegisterStringResponse)
+def register_user_string(payload: UserCreate, db: Session = Depends(get_db)):
+    result = register_user(payload, db)
+
+    return UserRegisterStringResponse(
+        success="true" if result.success else "false",
+        message=result.message,
+    )

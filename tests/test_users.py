@@ -109,6 +109,37 @@ def test_register_new_user(client):
         "message": "Registration successful"
     }
 
+def test_register_string_new_user(client):
+    response = client.post(
+        "/users/register-string",
+        json={
+            "phone_number": "+254722123456",
+            "full_name": "Jane Doe",
+            "email": "jane@example.com",
+            "id_number": "98765432"
+        }
+    )
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "success": "true",
+        "message": "Registration successful"
+    }
+
+def test_register_string_duplicate_user(client):
+    user = {
+        "phone_number": "+254722123456",
+        "full_name": "Jane Doe",
+        "email": "jane@example.com",
+        "id_number": "98765432"
+    }
+
+    first_response = client.post("/users/register-string", json=user)
+    second_response = client.post("/users/register-string", json=user)
+
+    assert first_response.status_code == 200
+    assert second_response.status_code == 409
+
 def test_register_duplicate_phone_number(client):
     user = {
         "phone_number": "+254722123456",
