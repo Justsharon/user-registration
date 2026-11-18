@@ -39,6 +39,11 @@ class UserLookupResponse(BaseModel):
     message: str
 
 
+class UserLookupStringResponse(BaseModel):
+    registered: str
+    message: str
+
+
 class UserResponse(BaseModel):
     success: bool
     message: str

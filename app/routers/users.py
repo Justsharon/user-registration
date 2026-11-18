@@ -5,7 +5,13 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.models import User
-from app.schemas import UserCreate, UserLookup, UserLookupResponse, UserResponse
+from app.schemas import (
+    UserCreate,
+    UserLookup,
+    UserLookupResponse,
+    UserLookupStringResponse,
+    UserResponse,
+)
 
 router = APIRouter()
 
@@ -18,6 +24,16 @@ def lookup_user(payload: UserLookup, db: Session = Depends(get_db)):
         return UserLookupResponse(registered=True, message="User found")
 
     return UserLookupResponse(registered=False, message="User not found")
+
+
+@router.post("/lookup-string", response_model=UserLookupStringResponse)
+def lookup_user_string(payload: UserLookup, db: Session = Depends(get_db)):
+    result = lookup_user(payload, db)
+
+    return UserLookupStringResponse(
+        registered="true" if result.registered else "false",
+        message=result.message,
+    )
 
 
 @router.post("/register", response_model=UserResponse)

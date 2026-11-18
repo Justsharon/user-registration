@@ -58,6 +58,40 @@ def test_lookup_unregistered_user(client):
         "message": "User not found"
     }
 
+def test_lookup_string_unregistered_user(client):
+    response = client.post(
+        "/users/lookup-string",
+        json={"phone_number": "+254712345678"}
+    )
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "registered": "false",
+        "message": "User not found"
+    }
+
+def test_lookup_string_registered_user(client):
+    client.post(
+        "/users/register",
+        json={
+            "phone_number": "+254722123456",
+            "full_name": "Jane Doe",
+            "email": "jane@example.com",
+            "id_number": "98765432"
+        }
+    )
+
+    response = client.post(
+        "/users/lookup-string",
+        json={"phone_number": "+254722123456"}
+    )
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "registered": "true",
+        "message": "User found"
+    }
+
 def test_register_new_user(client):
     response = client.post(
         "/users/register",
